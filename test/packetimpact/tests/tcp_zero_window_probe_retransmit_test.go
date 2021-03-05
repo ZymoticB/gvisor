@@ -51,8 +51,8 @@ func TestZeroWindowProbeRetransmit(t *testing.T) {
 	if _, err := conn.ExpectData(t, &testbench.TCP{}, samplePayload, time.Second); err != nil {
 		t.Fatalf("expected payload was not received: %s", err)
 	}
-	conn.Send(t, testbench.TCP{Flags: testbench.Uint8(header.TCPFlagAck | header.TCPFlagPsh)}, samplePayload)
-	if _, err := conn.ExpectData(t, &testbench.TCP{Flags: testbench.Uint8(header.TCPFlagAck)}, nil, time.Second); err != nil {
+	conn.Send(t, testbench.TCP{Flags: testbench.TCPFlags(header.TCPFlagAck | header.TCPFlagPsh)}, samplePayload)
+	if _, err := conn.ExpectData(t, &testbench.TCP{Flags: testbench.TCPFlags(header.TCPFlagAck)}, nil, time.Second); err != nil {
 		t.Fatalf("expected packet was not received: %s", err)
 	}
 
@@ -62,7 +62,7 @@ func TestZeroWindowProbeRetransmit(t *testing.T) {
 	// of the recorded first zero probe transmission duration.
 	//
 	// Advertize zero receive window again.
-	conn.Send(t, testbench.TCP{Flags: testbench.Uint8(header.TCPFlagAck), WindowSize: testbench.Uint16(0)})
+	conn.Send(t, testbench.TCP{Flags: testbench.TCPFlags(header.TCPFlagAck), WindowSize: testbench.Uint16(0)})
 	probeSeq := testbench.Uint32(uint32(*conn.RemoteSeqNum(t) - 1))
 	ackProbe := testbench.Uint32(uint32(*conn.RemoteSeqNum(t)))
 
@@ -98,10 +98,10 @@ func TestZeroWindowProbeRetransmit(t *testing.T) {
 		}
 		prev = got
 		// Acknowledge the zero-window probes from the dut.
-		conn.Send(t, testbench.TCP{AckNum: ackProbe, Flags: testbench.Uint8(header.TCPFlagAck), WindowSize: testbench.Uint16(0)})
+		conn.Send(t, testbench.TCP{AckNum: ackProbe, Flags: testbench.TCPFlags(header.TCPFlagAck), WindowSize: testbench.Uint16(0)})
 	}
 	// Advertize non-zero window.
-	conn.Send(t, testbench.TCP{AckNum: ackProbe, Flags: testbench.Uint8(header.TCPFlagAck)})
+	conn.Send(t, testbench.TCP{AckNum: ackProbe, Flags: testbench.TCPFlags(header.TCPFlagAck)})
 	// Expect the dut to recover and transmit data.
 	if _, err := conn.ExpectData(t, &testbench.TCP{SeqNum: ackProbe}, samplePayload, time.Second); err != nil {
 		t.Fatalf("expected payload was not received: %s", err)

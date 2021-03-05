@@ -74,6 +74,20 @@ const (
 	TCPOptionSackPermittedLength = 2
 )
 
+// TCPFlags is the dedicated type for TCP flags and it implements Stringer.
+type TCPFlags uint8
+
+// String implements Stringer.String.
+func (f TCPFlags) String() string {
+	flagsStr := []byte("FSRPAU")
+	for i := range flagsStr {
+		if f&(1<<uint(i)) == 0 {
+			flagsStr[i] = ' '
+		}
+	}
+	return string(flagsStr)
+}
+
 // TCPFields contains the fields of a TCP packet. It is used to describe the
 // fields of a packet that needs to be encoded.
 type TCPFields struct {
@@ -234,8 +248,8 @@ func (b TCP) Payload() []byte {
 }
 
 // Flags returns the flags field of the tcp header.
-func (b TCP) Flags() uint8 {
-	return b[TCPFlagsOffset]
+func (b TCP) Flags() TCPFlags {
+	return TCPFlags(b[TCPFlagsOffset])
 }
 
 // WindowSize returns the "window size" field of the tcp header.

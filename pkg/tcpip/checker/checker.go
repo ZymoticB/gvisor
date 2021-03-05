@@ -567,7 +567,7 @@ func TCPWindowLessThanEq(window uint16) TransportChecker {
 }
 
 // TCPFlags creates a checker that checks the tcp flags.
-func TCPFlags(flags uint8) TransportChecker {
+func TCPFlags(flags header.TCPFlags) TransportChecker {
 	return func(t *testing.T, h header.Transport) {
 		t.Helper()
 
@@ -584,7 +584,7 @@ func TCPFlags(flags uint8) TransportChecker {
 
 // TCPFlagsMatch creates a checker that checks that the tcp flags, masked by the
 // given mask, match the supplied flags.
-func TCPFlagsMatch(flags, mask uint8) TransportChecker {
+func TCPFlagsMatch(flags, mask header.TCPFlags) TransportChecker {
 	return func(t *testing.T, h header.Transport) {
 		t.Helper()
 

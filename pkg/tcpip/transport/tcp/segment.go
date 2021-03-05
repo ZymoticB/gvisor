@@ -252,7 +252,7 @@ func (s *segment) parse(skipChecksumValidation bool) bool {
 
 	s.sequenceNumber = seqnum.Value(s.hdr.SequenceNumber())
 	s.ackNumber = seqnum.Value(s.hdr.AckNumber())
-	s.flags = s.hdr.Flags()
+	s.flags = uint8(s.hdr.Flags())
 	s.window = seqnum.Size(s.hdr.WindowSize())
 	return true
 }

@@ -544,7 +544,7 @@ func (c *Context) ReceiveAndCheckPacketWithOptions(data []byte, offset, size, op
 			checker.DstPort(TestPort),
 			checker.TCPSeqNum(uint32(c.IRS.Add(seqnum.Size(1+offset)))),
 			checker.TCPAckNum(uint32(seqnum.Value(TestInitialSequenceNumber).Add(1))),
-			checker.TCPFlagsMatch(header.TCPFlagAck, ^uint8(header.TCPFlagPsh)),
+			checker.TCPFlagsMatch(header.TCPFlagAck, ^header.TCPFlags(header.TCPFlagPsh)),
 		),
 	)
 
@@ -571,7 +571,7 @@ func (c *Context) ReceiveNonBlockingAndCheckPacket(data []byte, offset, size int
 			checker.DstPort(TestPort),
 			checker.TCPSeqNum(uint32(c.IRS.Add(seqnum.Size(1+offset)))),
 			checker.TCPAckNum(uint32(seqnum.Value(TestInitialSequenceNumber).Add(1))),
-			checker.TCPFlagsMatch(header.TCPFlagAck, ^uint8(header.TCPFlagPsh)),
+			checker.TCPFlagsMatch(header.TCPFlagAck, ^header.TCPFlags(header.TCPFlagPsh)),
 		),
 	)
 
