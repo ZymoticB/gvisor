@@ -166,7 +166,8 @@ func (g *Gofer) Execute(_ context.Context, f *flag.FlagSet, args ...interface{})
 	// Start with root mount, then add any other additional mount as needed.
 	ats := make([]p9.Attacher, 0, len(spec.Mounts)+1)
 	ap, err := fsgofer.NewAttachPoint("/", fsgofer.Config{
-		ROMount: spec.Root.Readonly || conf.Overlay,
+		ROMount:     spec.Root.Readonly || conf.Overlay,
+		EnableXattr: conf.Verity,
 	})
 	if err != nil {
 		Fatalf("creating attach point: %v", err)
