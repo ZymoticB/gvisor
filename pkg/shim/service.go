@@ -345,6 +345,7 @@ func (s *service) Create(ctx context.Context, r *taskAPI.CreateTaskRequest) (*ta
 				path = ""
 			}
 		case *runtimeoptions.Options: // containerd 1.3.x+
+			log.L.Debugf("containerd 1.3.x+ options: %+v", o)
 			if o.ConfigPath == "" {
 				break
 			}
@@ -355,12 +356,14 @@ func (s *service) Create(ctx context.Context, r *taskAPI.CreateTaskRequest) (*ta
 		default:
 			return nil, fmt.Errorf("unsupported option type %q", r.Options.TypeUrl)
 		}
+		log.L.Debugf("config path %q", path)
 		if path != "" {
 			if _, err = toml.DecodeFile(path, &s.opts); err != nil {
 				return nil, fmt.Errorf("decode config file %q: %w", path, err)
 			}
 		}
 	}
+	log.L.Debugf("opts %+v", s.opts)
 
 	if len(s.opts.LogLevel) != 0 {
 		lvl, err := logrus.ParseLevel(s.opts.LogLevel)
